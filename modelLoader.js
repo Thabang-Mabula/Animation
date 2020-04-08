@@ -231,7 +231,8 @@ class ModelDisplayer {
   }
 
   displayMotionRegions () {
-    var geometry = new THREE.CircleGeometry(10, 32)
+    const TRIGGER_POINT_RADIUS = 10
+    var geometry = new THREE.CircleGeometry(TRIGGER_POINT_RADIUS, 32)
     var material = new THREE.MeshBasicMaterial({ color: 0x3236a8 })
     material.transparent = true
     material.opacity = 0.5
@@ -254,6 +255,32 @@ class ModelDisplayer {
     circle4.position.x = this.getCentre().x + 60
     circle4.position.y = this.getCentre().y + 40
     this._scene.add(circle4)
+
+    let arrayOfTriggerPointCircles = [circle1, circle2, circle3, circle4]
+    let arrayOf2DPoints = []
+    arrayOfTriggerPointCircles.forEach((circle) => {
+      let point = {
+        center: this._get2DCoordinatesOf3DPoint(circle.position.x, circle.position.y, circle.position.z),
+        top: this._get2DCoordinatesOf3DPoint(circle.position.x + TRIGGER_POINT_RADIUS / 2, circle.position.y, circle.position.z)
+      }
+
+      arrayOf2DPoints.push(point)
+    })
+
+    return arrayOf2DPoints
+  }
+
+  _get2DCoordinatesOf3DPoint (x, y, z) {
+    const vector = new THREE.Vector3(x, y, z)
+    const canvas = this._renderer.domElement
+
+    this._camera.updateMatrixWorld()
+    vector.project(this._camera)
+
+    vector.x = Math.round((0.5 + vector.x / 2) * (canvas.width / window.devicePixelRatio))
+    vector.y = Math.round((0.5 - vector.y / 2) * (canvas.height / window.devicePixelRatio))
+
+    return { x: vector.x, y: vector.y }
   }
 
   _loadModelOntoScene (filename) {

@@ -14,7 +14,7 @@ $(document).ready(async function () {
   await modelDisplayer.displayModelOnWebpage(modelFileName, modelDisplayArea)
 
   modelDisplayer.playAnimation(0)
-  modelDisplayer.displayMotionRegions()
+  console.log(modelDisplayer.displayMotionRegions())
   function animate () {
     requestAnimationFrame(animate)
     modelDisplayer.animate()
