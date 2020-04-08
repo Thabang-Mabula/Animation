@@ -205,6 +205,7 @@ class ModelDisplayer {
       allowAnimation = true
     }
 
+    let PAUSE_DURATION = 2000
     // if (currentTime > this._timeOff || this._currentAction == null) {
     if (allowAnimation && currentTime > this._timeOff) {
       let clip = this._model.animations[index]
@@ -214,7 +215,11 @@ class ModelDisplayer {
       action.repetitions = 1
       action.clampWhenFinished = true
       action.play()
-
+      setTimeout(() => {
+        action.timeScale = -1
+        action.reset()
+        action.play()
+      }, PAUSE_DURATION)
       console.log(`Played animation: ${index}`)
     }
   }
