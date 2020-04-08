@@ -191,6 +191,7 @@ class ModelDisplayer {
     this._camera = createCamera()
     this._renderer = createRenderer()
     this._enableResizeAdjust()
+    this._center = {}
   }
 
   playAnimation (index) {
@@ -225,6 +226,21 @@ class ModelDisplayer {
     })
   }
 
+  getCentre () {
+    return this._center
+  }
+
+  displayMotionRegions () {
+    var geometry = new THREE.CircleGeometry(15, 32)
+    var material = new THREE.MeshBasicMaterial({ color: 0x3236a8 })
+    material.transparent = true
+    material.opacity = 0.5
+    var circle = new THREE.Mesh(geometry, material)
+    circle.position.x = this.getCentre().x - 50
+    circle.position.y = this.getCentre().y + 10
+    this._scene.add(circle)
+  }
+
   _loadModelOntoScene (filename) {
     var loader = new THREE.GLTFLoader()
 
@@ -235,11 +251,11 @@ class ModelDisplayer {
 
         const box = new THREE.Box3().setFromObject(model)
         const size = box.getSize(new THREE.Vector3()).length()
-        const center = box.getCenter(new THREE.Vector3())
+        this._center = box.getCenter(new THREE.Vector3())
 
-        model.position.x += (model.position.x - center.x)
-        model.position.y += (model.position.y - center.y)
-        model.position.z += (model.position.z - center.z)
+        model.position.x += (model.position.x - this._center.x)
+        model.position.y += (model.position.y - this._center.y)
+        model.position.z += (model.position.z - this._center.z)
 
         this._camera.near = size / 100
         this._camera.far = size * 100
