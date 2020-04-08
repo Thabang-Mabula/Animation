@@ -178,7 +178,7 @@ let displayModelOnWebpage = (filename, displayDOMElement) => {
 function playAnimation (model, mixer, index) {
   mixer = new THREE.AnimationMixer(model.scene)
   var action = mixer.clipAction(model.animations[index])
-  action.setLoop(THREE.LoopOnce)
+  // action.setLoop(THREE.LoopOnce)
   action.play()
 }
 
@@ -261,10 +261,43 @@ class ModelDisplayer {
     arrayOfTriggerPointCircles.forEach((circle) => {
       let point = {
         center: this._get2DCoordinatesOf3DPoint(circle.position.x, circle.position.y, circle.position.z),
-        top: this._get2DCoordinatesOf3DPoint(circle.position.x + TRIGGER_POINT_RADIUS / 2, circle.position.y, circle.position.z)
+        top: this._get2DCoordinatesOf3DPoint(circle.position.x + TRIGGER_POINT_RADIUS, circle.position.y, circle.position.z)
       }
 
       arrayOf2DPoints.push(point)
+    })
+
+    return arrayOf2DPoints
+  }
+
+  getTriggerRegions () {
+    const TRIGGER_POINT_RADIUS = 10
+    let triggerPoints = [
+      {
+        x: this.getCentre().x - 5,
+        y: this.getCentre().y + 50
+      },
+      {
+        x: this.getCentre().x + 30,
+        y: this.getCentre().y + 50
+      },
+      {
+        x: this.getCentre().x - 50,
+        y: this.getCentre().y + 10
+      },
+      {
+        x: this.getCentre().x + 60,
+        y: this.getCentre().y + 40
+      }
+    ]
+    let arrayOf2DPoints = []
+    triggerPoints.forEach((point) => {
+      let point2D = {
+        center: this._get2DCoordinatesOf3DPoint(point.x, point.y, 0),
+        top: this._get2DCoordinatesOf3DPoint(point.x + TRIGGER_POINT_RADIUS, point.y, 0)
+      }
+
+      arrayOf2DPoints.push(point2D)
     })
 
     return arrayOf2DPoints

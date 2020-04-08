@@ -2,6 +2,7 @@ import { displayModelOnWebpage, ModelDisplayer } from './modelLoader.js'
 
 var modelDisplayArea = $('.model-area')
 var modelFileName = 'character.glb'
+var modelDisplayer = new ModelDisplayer(modelFileName, modelDisplayArea)
 
 // displayModelOnWebpage(modelFileName, modelDisplayArea)
 //   .then((model, mixer) => {
@@ -10,11 +11,24 @@ var modelFileName = 'character.glb'
 //     console.error(err)
 //   })
 $(document).ready(async function () {
-  let modelDisplayer = new ModelDisplayer(modelFileName, modelDisplayArea)
   await modelDisplayer.displayModelOnWebpage(modelFileName, modelDisplayArea)
 
-  modelDisplayer.playAnimation(0)
-  console.log(modelDisplayer.displayMotionRegions())
+  // modelDisplayer.playAnimation(0)
+  // console.log(modelDisplayer.displayMotionRegions())
+
+  $('body').mousemove(function (event) {
+    let mousePosition = { x: event.pageX, y: event.pageY }
+    let triggerRegionPoints = modelDisplayer.getTriggerRegions()
+    let length = 4
+
+    for (let i = 0; i < length; i++) {
+      if (isWithinTriggerRegion(mousePosition, triggerRegionPoints[i])) {
+        modelDisplayer.playAnimation(i)
+        console.log(`Played animation: ${i}`)
+      }
+    }
+  })
+
   function animate () {
     requestAnimationFrame(animate)
     modelDisplayer.animate()
@@ -23,6 +37,13 @@ $(document).ready(async function () {
   animate()
 })
 
-$('body').mousemove(function (event) {
-  console.log('Mouse moved')
-})
+function isWithinTriggerRegion (mousePosition, triggerRegionKeyPoints) {
+  let radius = euclidianDistance(triggerRegionKeyPoints.center, triggerRegionKeyPoints.top)
+  let distanceFromMouseToCentre = euclidianDistance(triggerRegionKeyPoints.center, mousePosition)
+
+  return distanceFromMouseToCentre <= radius
+}
+
+function euclidianDistance (p1, p2) {
+  return Math.sqrt(Math.pow((p1.x - p2.x), 2) + Math.pow((p1.y - p2.y), 2))
+}
