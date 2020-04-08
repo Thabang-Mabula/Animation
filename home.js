@@ -24,7 +24,6 @@ $(document).ready(async function () {
     for (let i = 0; i < length; i++) {
       if (isWithinTriggerRegion(mousePosition, triggerRegionPoints[i])) {
         modelDisplayer.playAnimation(i)
-        console.log(`Played animation: ${i}`)
       }
     }
   })

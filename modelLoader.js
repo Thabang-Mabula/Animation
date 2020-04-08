@@ -192,12 +192,31 @@ class ModelDisplayer {
     this._renderer = createRenderer()
     this._enableResizeAdjust()
     this._center = {}
+    this._timeOff = new Date()
+    this._currentAction = null
   }
 
   playAnimation (index) {
-    var action = this._mixer.clipAction(this._model.animations[index])
-    action.setLoop(THREE.LoopOnce)
-    action.play()
+    let currentTime = new Date()
+    let allowAnimation = false
+    if (this._currentAction == null) {
+      allowAnimation = true
+    } else if (!this._currentAction.isRunning()) {
+      allowAnimation = true
+    }
+
+    // if (currentTime > this._timeOff || this._currentAction == null) {
+    if (allowAnimation && currentTime > this._timeOff) {
+      let clip = this._model.animations[index]
+      this._timeOff = new Date(currentTime.setSeconds(currentTime.getSeconds() + clip.duration * 2 + 2))
+      var action = this._mixer.clipAction(clip)
+      action.setLoop(THREE.LoopPingPong)
+      action.repetitions = 1
+      action.clampWhenFinished = true
+      action.play()
+
+      console.log(`Played animation: ${index}`)
+    }
   }
 
   displayModelOnWebpage (filename, displayDOMElement) {
@@ -349,7 +368,7 @@ class ModelDisplayer {
 
   animate () {
     // requestAnimationFrame(this._animate)
-    let delta = 0.75 * this._clock.getDelta()
+    let delta = this._clock.getDelta()
     this._mixer.update(delta)
     this._renderer.render(this._scene, this._camera)
   }
