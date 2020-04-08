@@ -22,3 +22,7 @@ $(document).ready(async function () {
 
   animate()
 })
+
+$('body').mousemove(function (event) {
+  console.log('Mouse moved')
+})
