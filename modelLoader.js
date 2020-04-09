@@ -205,6 +205,7 @@ class ModelDisplayer {
       this._currentAction = this._mixer.clipAction(clip)
       this._currentAction.setLoop(THREE.LoopOnce)
       this._currentAction.clampWhenFinished = true
+      this._currentAction.paused = false
       this._currentAction.play()
       console.log(`Played animation: ${index}`)
     }
