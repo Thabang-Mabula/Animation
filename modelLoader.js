@@ -335,6 +335,21 @@ class ModelDisplayer {
     this._scene.add(circle)
   }
 
+  getActivationRegion () {
+    const RADIUS = 70
+    let regionCentre = {
+      x: this.getCentre().x,
+      y: this.getCentre().y + 25
+    }
+
+    let point2D = {
+      center: this._get2DCoordinatesOf3DPoint(regionCentre.x, regionCentre.y, 0),
+      top: this._get2DCoordinatesOf3DPoint(regionCentre.x + RADIUS, regionCentre.y, 0)
+    }
+
+    return point2D
+  }
+
   getTriggerRegions () {
     const TRIGGER_POINT_RADIUS = 10
     let triggerPoints = [

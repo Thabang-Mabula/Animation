@@ -19,11 +19,16 @@ $(document).ready(async function () {
   $('body').mousemove(function (event) {
     let mousePosition = { x: event.pageX, y: event.pageY }
     let triggerRegionPoints = modelDisplayer.getTriggerRegions()
+    let activationRegion = modelDisplayer.getActivationRegion()
     let length = 4
 
-    for (let i = 0; i < length; i++) {
-      if (isWithinTriggerRegion(mousePosition, triggerRegionPoints[i])) {
-        modelDisplayer.playAnimation(i)
+    if (!isWithinTriggerRegion(mousePosition, activationRegion)) {
+      modelDisplayer.revertToOriginalPosition()
+    } else {
+      for (let i = 0; i < length; i++) {
+        if (isWithinTriggerRegion(mousePosition, triggerRegionPoints[i])) {
+          modelDisplayer.playAnimation(i)
+        }
       }
     }
   })
