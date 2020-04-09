@@ -28,6 +28,10 @@ $(document).ready(async function () {
     }
   })
 
+  $('#revert').click(() => {
+    modelDisplayer.revertToOriginalPosition()
+  })
+
   function animate () {
     requestAnimationFrame(animate)
     modelDisplayer.animate()

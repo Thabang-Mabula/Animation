@@ -198,25 +198,24 @@ class ModelDisplayer {
 
   playAnimation (index) {
     let currentTime = new Date()
-    let allowAnimation = false
-    if (this._currentAction == null) {
-      allowAnimation = true
-    } else if (!this._currentAction.isRunning()) {
-      allowAnimation = true
-    }
 
-    let PAUSE_DURATION = 2
-    let PLAY_DURATION = 2
-    // if (currentTime > this._timeOff || this._currentAction == null) {
     if (currentTime > this._timeOff) {
       let clip = this._model.animations[index]
-      this._timeOff = new Date(currentTime.setSeconds(currentTime.getSeconds() + clip.duration * 5 * 2 + PAUSE_DURATION))
-      var action = this._mixer.clipAction(clip)
-      action.setLoop(THREE.LoopOnce)
-      action.clampWhenFinished = true
-      action.play()
+      this._timeOff = new Date(currentTime.setSeconds(currentTime.getSeconds() + clip.duration * 5))
+      this._currentAction = this._mixer.clipAction(clip)
+      this._currentAction.setLoop(THREE.LoopOnce)
+      this._currentAction.clampWhenFinished = true
+      this._currentAction.play()
       console.log(`Played animation: ${index}`)
     }
+  }
+
+  revertToOriginalPosition () {
+    this._currentAction.timeScale = -1
+    this._currentAction.clampWhenFinished = false
+    this._currentAction.paused = false
+    this._currentAction.setLoop(THREE.LoopOnce)
+    this._currentAction.play()
   }
 
   displayModelOnWebpage (filename, displayDOMElement) {
