@@ -194,23 +194,34 @@ class ModelDisplayer {
     this._center = {}
     this._timeOff = new Date()
     this._currentAction = null
+    this._isAnimationPlayable = true
   }
 
   playAnimation (index) {
-    if (this._isAnimaionPlayable()) {
-      let clip = this._model.animations[index]
-      this._currentAction = this._mixer.clipAction(clip)
-      this._currentAction.setLoop(THREE.LoopOnce)
-      this._currentAction.clampWhenFinished = true
-      this._currentAction.paused = false
-      this._currentAction.enabled = true
-      this._currentAction.timeScale = 1
-      this._currentAction.play()
-      console.log(`Played animation: ${index}`)
+    if (this._isActionPlayable()) {
+      let isClipAtStartingPoint = false
+
+      if (this._currentAction == null) {
+        isClipAtStartingPoint = true
+      } else if (this._currentAction.time === 0) {
+        isClipAtStartingPoint = true
+      }
+
+      if (isClipAtStartingPoint) {
+        let clip = this._model.animations[index]
+        this._currentAction = this._mixer.clipAction(clip)
+        this._currentAction.setLoop(THREE.LoopOnce)
+        this._currentAction.clampWhenFinished = true
+        this._currentAction.paused = false
+        this._currentAction.enabled = true
+        this._currentAction.timeScale = 1
+        this._currentAction.play()
+        console.log(`Played animation: ${index}`)
+      }
     }
   }
 
-  _isAnimaionPlayable () {
+  _isActionPlayable () {
     let shouldPlay = false
 
     if (this._currentAction == null) {
@@ -223,12 +234,22 @@ class ModelDisplayer {
   }
 
   revertToOriginalPosition () {
-    if (this._isAnimaionPlayable()) {
-      this._currentAction.timeScale = -1
-      this._currentAction.clampWhenFinished = false
-      this._currentAction.paused = false
-      this._currentAction.setLoop(THREE.LoopOnce)
-      this._currentAction.play()
+    if (this._isActionPlayable()) {
+      let isClipAtEndPoint = true
+
+      if (this._currentAction == null) {
+        isClipAtEndPoint = false
+      } else if (this._currentAction.time === 0) {
+        isClipAtEndPoint = false
+      }
+
+      if (isClipAtEndPoint) {
+        this._currentAction.timeScale = -1
+        this._currentAction.clampWhenFinished = false
+        this._currentAction.paused = false
+        this._currentAction.setLoop(THREE.LoopOnce)
+        this._currentAction.play()
+      }
     }
   }
 
