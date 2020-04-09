@@ -205,21 +205,16 @@ class ModelDisplayer {
       allowAnimation = true
     }
 
-    let PAUSE_DURATION = 2000
+    let PAUSE_DURATION = 2
+    let PLAY_DURATION = 2
     // if (currentTime > this._timeOff || this._currentAction == null) {
-    if (allowAnimation && currentTime > this._timeOff) {
+    if (currentTime > this._timeOff) {
       let clip = this._model.animations[index]
-      this._timeOff = new Date(currentTime.setSeconds(currentTime.getSeconds() + clip.duration * 2 + 2))
+      this._timeOff = new Date(currentTime.setSeconds(currentTime.getSeconds() + clip.duration * 5 * 2 + PAUSE_DURATION))
       var action = this._mixer.clipAction(clip)
-      action.setLoop(THREE.LoopPingPong)
-      action.repetitions = 1
+      action.setLoop(THREE.LoopOnce)
       action.clampWhenFinished = true
       action.play()
-      setTimeout(() => {
-        action.timeScale = -1
-        action.reset()
-        action.play()
-      }, PAUSE_DURATION)
       console.log(`Played animation: ${index}`)
     }
   }
