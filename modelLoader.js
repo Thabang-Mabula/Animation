@@ -197,26 +197,39 @@ class ModelDisplayer {
   }
 
   playAnimation (index) {
-    let currentTime = new Date()
-
-    if (currentTime > this._timeOff) {
+    if (this._isAnimaionPlayable()) {
       let clip = this._model.animations[index]
-      this._timeOff = new Date(currentTime.setSeconds(currentTime.getSeconds() + clip.duration * 5))
       this._currentAction = this._mixer.clipAction(clip)
       this._currentAction.setLoop(THREE.LoopOnce)
       this._currentAction.clampWhenFinished = true
       this._currentAction.paused = false
+      this._currentAction.enabled = true
+      this._currentAction.timeScale = 1
       this._currentAction.play()
       console.log(`Played animation: ${index}`)
     }
   }
 
+  _isAnimaionPlayable () {
+    let shouldPlay = false
+
+    if (this._currentAction == null) {
+      shouldPlay = true
+    } else if (this._currentAction.paused || this._currentAction.time === 0) {
+      shouldPlay = true
+    }
+
+    return shouldPlay
+  }
+
   revertToOriginalPosition () {
-    this._currentAction.timeScale = -1
-    this._currentAction.clampWhenFinished = false
-    this._currentAction.paused = false
-    this._currentAction.setLoop(THREE.LoopOnce)
-    this._currentAction.play()
+    if (this._isAnimaionPlayable()) {
+      this._currentAction.timeScale = -1
+      this._currentAction.clampWhenFinished = false
+      this._currentAction.paused = false
+      this._currentAction.setLoop(THREE.LoopOnce)
+      this._currentAction.play()
+    }
   }
 
   displayModelOnWebpage (filename, displayDOMElement) {
@@ -367,7 +380,6 @@ class ModelDisplayer {
   }
 
   animate () {
-    // requestAnimationFrame(this._animate)
     let delta = this._clock.getDelta()
     this._mixer.update(delta)
     this._renderer.render(this._scene, this._camera)
