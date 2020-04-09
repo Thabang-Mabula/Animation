@@ -12,7 +12,7 @@ var modelDisplayer = new ModelDisplayer(modelFileName, modelDisplayArea)
 //   })
 $(document).ready(async function () {
   await modelDisplayer.displayModelOnWebpage(modelFileName, modelDisplayArea)
-
+  modelDisplayer.displayDeactivateCircle()
   // modelDisplayer.playAnimation(0)
   // console.log(modelDisplayer.displayMotionRegions())
 

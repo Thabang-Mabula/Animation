@@ -323,6 +323,18 @@ class ModelDisplayer {
     return arrayOf2DPoints
   }
 
+  displayDeactivateCircle () {
+    const RADIUS = 70
+    var geometry = new THREE.SphereGeometry(RADIUS, 32, 32)
+    var material = new THREE.MeshBasicMaterial({ color: 0x3236a8 })
+    material.transparent = true
+    material.opacity = 0.5
+    var circle = new THREE.Mesh(geometry, material)
+    circle.position.x = this.getCentre().x
+    circle.position.y = this.getCentre().y + 25
+    this._scene.add(circle)
+  }
+
   getTriggerRegions () {
     const TRIGGER_POINT_RADIUS = 10
     let triggerPoints = [
