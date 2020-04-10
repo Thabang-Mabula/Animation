@@ -9,10 +9,7 @@ import {
   Box3
 } from './three.module.js'
 
-import { Model } from './modelClass.js'
-
 // Global reference to the loaded model so that other functions can manipulate it
-var modelObj = new Model()
 
 /**
  * Configures user interaction and manipualtion of the view of the scene
@@ -45,37 +42,6 @@ let enableResizeAdjust = (camera, renderer) => {
 }
 
 /**
-   * Retrieves a specified .glb or .gltf file and renders it to the screen
-   * @param {string} filename The name of the file with the extension (e.g. '3DModel.glb')
-   * @param {THREE.PerspectiveCamera} camera The main camera of the renderer
-   */
-let getModel = async (filename, camera) => {
-  var loader = new THREE.GLTF2Loader()
-
-  loader.load('./models/' + filename, gltf => {
-    let model = gltf.scene
-    model.scale.set(2, 2, 2)
-
-    const box = new THREE.Box3().setFromObject(model)
-    const size = box.getSize(new THREE.Vector3()).length()
-    const center = box.getCenter(new THREE.Vector3())
-
-    model.position.x += (model.position.x - center.x)
-    model.position.y += (model.position.y - center.y)
-    model.position.z += (model.position.z - center.z)
-
-    camera.near = size / 100
-    camera.far = size * 100
-    camera.updateProjectionMatrix()
-
-    return Promise.resolve(model)
-    // return model
-  }, undefined, function (error) {
-    console.error(error)
-  })
-}
-
-/**
  * Creates and returns a pre-configured perspective camera
  * @returns {THREE.PerspectiveCamera}
  */
@@ -97,92 +63,14 @@ let createRenderer = () => {
 }
 
 /**
- * Function used to configure a webpage to display a specified 3D Model
- * @param {string} filename The name of the file with the extension (e.g. '3DModel.glb')
+ * Class for dislaying and controlling the model
  */
-let displayModelOnWebpage = (filename, displayDOMElement) => {
-  return new Promise((resolve, reject) => {
-    $(document).ready(async function () {
-      const scene = new Scene()
-
-      const camera = createCamera()
-      const renderer = createRenderer()
-      enableResizeAdjust(camera, renderer)
-      displayDOMElement.append(renderer.domElement)
-
-      // Add ambient lighting
-      var ambientLight = new AmbientLight(0xffffff, 0.2)
-      scene.add(ambientLight)
-
-      // Add point light
-      var pointLight = new PointLight(0xababab, 1)
-      pointLight.position.set(1000, 1000, 0)
-      scene.add(pointLight)
-
-      // Add the model
-      var loader = new THREE.GLTFLoader()
-
-      let loaderPromise = new Promise((resolve, reject) => {
-        loader.load('./models/' + filename, gltf => {
-          let model = gltf.scene
-          // model.scale.set(1, 1, 2)
-
-          const box = new THREE.Box3().setFromObject(model)
-          const size = box.getSize(new THREE.Vector3()).length()
-          const center = box.getCenter(new THREE.Vector3())
-
-          model.position.x += (model.position.x - center.x)
-          model.position.y += (model.position.y - center.y)
-          model.position.z += (model.position.z - center.z)
-
-          camera.near = size / 100
-          camera.far = size * 100
-          camera.updateProjectionMatrix()
-
-          model.lookAt(camera.position)
-
-          scene.add(model)
-          resolve(gltf)
-        }, undefined, function (error) {
-          console.error(error)
-          reject(error)
-        })
-      })
-
-      var mixer
-      loaderPromise.then((model) => {
-        let mixer = new THREE.AnimationMixer(model.scene)
-        // var action = mixer.clipAction(model.animations[0])
-        // action.setLoop(THREE.LoopOnce)
-        // action.play()
-        animate()
-        resolve(model, mixer)
-      }).catch((err) => {
-        console.error(err)
-        reject(err)
-      })
-
-      var clock = new THREE.Clock()
-
-      function animate () {
-        requestAnimationFrame(animate)
-        // modelObj.updateModel(scene, camera)
-        renderer.render(scene, camera)
-        let delta = 0.75 * clock.getDelta()
-        mixer.update(delta)
-      }
-    })
-  })
-}
-
-function playAnimation (model, mixer, index) {
-  mixer = new THREE.AnimationMixer(model.scene)
-  var action = mixer.clipAction(model.animations[index])
-  // action.setLoop(THREE.LoopOnce)
-  action.play()
-}
-
 class ModelDisplayer {
+  /**
+   * Constructor
+   * @param {String} modelFileName File name of the model (assumed to be in the "models" folder)
+   * @param {Div} displayDOMElement Div object in which the object will be displayed
+   */
   constructor (modelFileName, displayDOMElement) {
     this._clock = new THREE.Clock()
     this._mixer = {}
@@ -197,6 +85,10 @@ class ModelDisplayer {
     this._isAnimationPlayable = true
   }
 
+  /**
+   * Plays a specified animation of the model
+   * @param {Number} index Index of the animation in the array of animations stores with the model
+   */
   playAnimation (index) {
     if (this._isActionPlayable()) {
       let isClipAtStartingPoint = false
@@ -216,11 +108,14 @@ class ModelDisplayer {
         this._currentAction.enabled = true
         this._currentAction.timeScale = 1
         this._currentAction.play()
-        console.log(`Played animation: ${index}`)
       }
     }
   }
 
+  /**
+   * Returns a boolean which indicates whether an animation can be played at this time
+   *  @returns {boolean} Whether an animation can be played
+   */
   _isActionPlayable () {
     let shouldPlay = false
 
@@ -233,6 +128,9 @@ class ModelDisplayer {
     return shouldPlay
   }
 
+  /**
+   * Plays the most recenly-played animation in reverse so that the model can return to its original position
+   */
   revertToOriginalPosition () {
     if (this._isActionPlayable()) {
       let isClipAtEndPoint = true
@@ -253,6 +151,11 @@ class ModelDisplayer {
     }
   }
 
+  /**
+   * Displays a specified model to the web page
+   * @param {String} filename File name of the model (assumed to be in the "models" folder)
+   * @param {Div} displayDOMElement Div object in which the object will be displayed
+   */
   displayModelOnWebpage (filename, displayDOMElement) {
     return new Promise((resolve, reject) => {
       displayDOMElement.append(this._renderer.domElement)
@@ -267,7 +170,6 @@ class ModelDisplayer {
       this._scene.add(pointLight)
 
       // Add the model
-
       this._loadModelOntoScene(filename).then((model) => {
         this._model = model
         this._mixer = new THREE.AnimationMixer(model.scene)
@@ -279,10 +181,16 @@ class ModelDisplayer {
     })
   }
 
-  getCentre () {
+  /**
+   * Reutrns the coordinates of the centre of the scene
+   */
+  _getCentre () {
     return this._center
   }
 
+  /**
+   * Shows spheres around the motion trigger regions
+   */
   displayMotionRegions () {
     const TRIGGER_POINT_RADIUS = 10
     var geometry = new THREE.SphereGeometry(20, 32, 32)
@@ -290,26 +198,26 @@ class ModelDisplayer {
     material.transparent = true
     material.opacity = 0.5
     var circle3 = new THREE.Mesh(geometry, material)
-    circle3.position.x = this.getCentre().x - 50
-    circle3.position.y = this.getCentre().y + 10
+    circle3.position.x = this._getCentre().x - 50
+    circle3.position.y = this._getCentre().y + 10
     this._scene.add(circle3)
 
     geometry = new THREE.SphereGeometry(10, 32, 32)
     var circle1 = new THREE.Mesh(geometry, material)
-    circle1.position.x = this.getCentre().x - 5
-    circle1.position.y = this.getCentre().y + 50
+    circle1.position.x = this._getCentre().x - 5
+    circle1.position.y = this._getCentre().y + 50
     this._scene.add(circle1)
 
     geometry = new THREE.SphereGeometry(15, 32, 32)
     var circle2 = new THREE.Mesh(geometry, material)
-    circle2.position.x = this.getCentre().x + 30
-    circle2.position.y = this.getCentre().y + 50
+    circle2.position.x = this._getCentre().x + 30
+    circle2.position.y = this._getCentre().y + 50
     this._scene.add(circle2)
 
     geometry = new THREE.SphereGeometry(10, 32, 32)
     var circle4 = new THREE.Mesh(geometry, material)
-    circle4.position.x = this.getCentre().x + 60
-    circle4.position.y = this.getCentre().y + 40
+    circle4.position.x = this._getCentre().x + 60
+    circle4.position.y = this._getCentre().y + 40
     this._scene.add(circle4)
 
     let arrayOfTriggerPointCircles = [circle1, circle2, circle3, circle4]
@@ -333,16 +241,20 @@ class ModelDisplayer {
     material.transparent = true
     material.opacity = 0
     var circle = new THREE.Mesh(geometry, material)
-    circle.position.x = this.getCentre().x
-    circle.position.y = this.getCentre().y + 25
+    circle.position.x = this._getCentre().x
+    circle.position.y = this._getCentre().y + 25
     this._scene.add(circle)
   }
 
+  /**
+   * Gets the coordiantes of the centre and topmost points of the activation region
+   * @returns {Object} An object that contains the pixel coordinates of the centre and topmost point of the actviation region
+   */
   getActivationRegion () {
     const RADIUS = 70
     let regionCentre = {
-      x: this.getCentre().x,
-      y: this.getCentre().y + 25
+      x: this._getCentre().x,
+      y: this._getCentre().y + 25
     }
 
     let point2D = {
@@ -353,24 +265,27 @@ class ModelDisplayer {
     return point2D
   }
 
+  /**
+   * Gets the coordiantes of the centre and topmost points of each of the trigger regions
+   * @returns {Object} An object that contains the pixel coordinates of the centre and topmost point of each of the trigger regions
+   */
   getTriggerRegions () {
-    const TRIGGER_POINT_RADIUS = 10
     let triggerPoints = [
       {
-        x: this.getCentre().x - 5,
-        y: this.getCentre().y + 50
+        x: this._getCentre().x - 5,
+        y: this._getCentre().y + 50
       },
       {
-        x: this.getCentre().x + 30,
-        y: this.getCentre().y + 50
+        x: this._getCentre().x + 30,
+        y: this._getCentre().y + 50
       },
       {
-        x: this.getCentre().x - 50,
-        y: this.getCentre().y + 10
+        x: this._getCentre().x - 50,
+        y: this._getCentre().y + 10
       },
       {
-        x: this.getCentre().x + 60,
-        y: this.getCentre().y + 40
+        x: this._getCentre().x + 60,
+        y: this._getCentre().y + 40
       }
     ]
     let arrayOf2DPoints = []
@@ -389,6 +304,12 @@ class ModelDisplayer {
     return arrayOf2DPoints
   }
 
+  /**
+   * Converts a 3D point in three.js scene to its respective 2D coordinates on the webpage
+   * @param {number} x x-coordinate
+   * @param {number} y y-coordinate
+   * @param {number} z z-coordinate
+   */
   _get2DCoordinatesOf3DPoint (x, y, z) {
     const vector = new THREE.Vector3(x, y, z)
     const canvas = this._renderer.domElement
@@ -402,6 +323,11 @@ class ModelDisplayer {
     return { x: vector.x, y: vector.y }
   }
 
+  /**
+   * Loads models to the current scene
+   * @param {String} filename Filename of the model (assumed to be in the "models" folder)
+   * @returns {Promise} resolves the gltf object upon success
+   */
   _loadModelOntoScene (filename) {
     var loader = new THREE.GLTFLoader()
 
@@ -433,12 +359,18 @@ class ModelDisplayer {
     })
   }
 
+  /**
+   * Function to be called within the main animation loop
+   */
   animate () {
     let delta = this._clock.getDelta()
     this._mixer.update(delta)
     this._renderer.render(this._scene, this._camera)
   }
 
+  /**
+   * Enables to model to resize as the browser window size changes
+   */
   _enableResizeAdjust () {
     window.addEventListener('resize', () => {
       let width = window.innerWidth
@@ -450,14 +382,4 @@ class ModelDisplayer {
   }
 }
 
-// /**
-//  * This code is merely put here as an example o how the "displayModelOnWebpage" function should be used.
-//  * If this function is imported and used in another Javascript file, the line of code below must be deleted.
-//  */
-// displayModelOnWebpage('exported (2).glb')
-
-/**
-   * This function is exported to allow other client-side JavaScript files to import
-   * the function and use it to configure the page for displaing a 3D Model (.glb or .gltf)
-   */
-export { displayModelOnWebpage, ModelDisplayer }
+export { ModelDisplayer }

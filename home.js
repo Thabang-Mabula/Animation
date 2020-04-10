@@ -1,4 +1,4 @@
-import { displayModelOnWebpage, ModelDisplayer } from './modelLoader.js'
+import { ModelDisplayer } from './modelLoader.js'
 
 var modelDisplayArea = $('.model-area')
 var modelFileName = 'character.glb'
