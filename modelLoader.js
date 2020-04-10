@@ -285,7 +285,7 @@ class ModelDisplayer {
 
   displayMotionRegions () {
     const TRIGGER_POINT_RADIUS = 10
-    var geometry = new THREE.CircleGeometry(TRIGGER_POINT_RADIUS, 32)
+    var geometry = new THREE.SphereGeometry(20, 32, 32)
     var material = new THREE.MeshBasicMaterial({ color: 0x3236a8 })
     material.transparent = true
     material.opacity = 0.5
@@ -294,16 +294,19 @@ class ModelDisplayer {
     circle3.position.y = this.getCentre().y + 10
     this._scene.add(circle3)
 
+    geometry = new THREE.SphereGeometry(10, 32, 32)
     var circle1 = new THREE.Mesh(geometry, material)
     circle1.position.x = this.getCentre().x - 5
     circle1.position.y = this.getCentre().y + 50
     this._scene.add(circle1)
 
+    geometry = new THREE.SphereGeometry(15, 32, 32)
     var circle2 = new THREE.Mesh(geometry, material)
     circle2.position.x = this.getCentre().x + 30
     circle2.position.y = this.getCentre().y + 50
     this._scene.add(circle2)
 
+    geometry = new THREE.SphereGeometry(10, 32, 32)
     var circle4 = new THREE.Mesh(geometry, material)
     circle4.position.x = this.getCentre().x + 60
     circle4.position.y = this.getCentre().y + 40
@@ -326,9 +329,9 @@ class ModelDisplayer {
   displayDeactivateCircle () {
     const RADIUS = 70
     var geometry = new THREE.SphereGeometry(RADIUS, 32, 32)
-    var material = new THREE.MeshBasicMaterial({ color: 0x3236a8 })
+    var material = new THREE.MeshBasicMaterial({ color: 0xfc030b })
     material.transparent = true
-    material.opacity = 0.5
+    material.opacity = 0
     var circle = new THREE.Mesh(geometry, material)
     circle.position.x = this.getCentre().x
     circle.position.y = this.getCentre().y + 25
@@ -371,13 +374,16 @@ class ModelDisplayer {
       }
     ]
     let arrayOf2DPoints = []
+    let triggerPointRadii = [10, 15, 20, 10]
+    let index = 0
     triggerPoints.forEach((point) => {
       let point2D = {
         center: this._get2DCoordinatesOf3DPoint(point.x, point.y, 0),
-        top: this._get2DCoordinatesOf3DPoint(point.x + TRIGGER_POINT_RADIUS, point.y, 0)
+        top: this._get2DCoordinatesOf3DPoint(point.x + triggerPointRadii[index], point.y, 0)
       }
 
       arrayOf2DPoints.push(point2D)
+      index += 1
     })
 
     return arrayOf2DPoints
