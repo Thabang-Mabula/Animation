@@ -189,64 +189,6 @@ class ModelDisplayer {
   }
 
   /**
-   * Shows spheres around the motion trigger regions
-   */
-  displayMotionRegions () {
-    const TRIGGER_POINT_RADIUS = 10
-    var geometry = new THREE.SphereGeometry(20, 32, 32)
-    var material = new THREE.MeshBasicMaterial({ color: 0x3236a8 })
-    material.transparent = true
-    material.opacity = 0.5
-    var circle3 = new THREE.Mesh(geometry, material)
-    circle3.position.x = this._getCentre().x - 50
-    circle3.position.y = this._getCentre().y + 10
-    this._scene.add(circle3)
-
-    geometry = new THREE.SphereGeometry(10, 32, 32)
-    var circle1 = new THREE.Mesh(geometry, material)
-    circle1.position.x = this._getCentre().x - 5
-    circle1.position.y = this._getCentre().y + 50
-    this._scene.add(circle1)
-
-    geometry = new THREE.SphereGeometry(15, 32, 32)
-    var circle2 = new THREE.Mesh(geometry, material)
-    circle2.position.x = this._getCentre().x + 30
-    circle2.position.y = this._getCentre().y + 50
-    this._scene.add(circle2)
-
-    geometry = new THREE.SphereGeometry(10, 32, 32)
-    var circle4 = new THREE.Mesh(geometry, material)
-    circle4.position.x = this._getCentre().x + 60
-    circle4.position.y = this._getCentre().y + 40
-    this._scene.add(circle4)
-
-    let arrayOfTriggerPointCircles = [circle1, circle2, circle3, circle4]
-    let arrayOf2DPoints = []
-    arrayOfTriggerPointCircles.forEach((circle) => {
-      let point = {
-        center: this._get2DCoordinatesOf3DPoint(circle.position.x, circle.position.y, circle.position.z),
-        top: this._get2DCoordinatesOf3DPoint(circle.position.x + TRIGGER_POINT_RADIUS, circle.position.y, circle.position.z)
-      }
-
-      arrayOf2DPoints.push(point)
-    })
-
-    return arrayOf2DPoints
-  }
-
-  displayDeactivateCircle () {
-    const RADIUS = 70
-    var geometry = new THREE.SphereGeometry(RADIUS, 32, 32)
-    var material = new THREE.MeshBasicMaterial({ color: 0xfc030b })
-    material.transparent = true
-    material.opacity = 0
-    var circle = new THREE.Mesh(geometry, material)
-    circle.position.x = this._getCentre().x
-    circle.position.y = this._getCentre().y + 25
-    this._scene.add(circle)
-  }
-
-  /**
    * Gets the coordiantes of the centre and topmost points of the activation region
    * @returns {Object} An object that contains the pixel coordinates of the centre and topmost point of the actviation region
    */
@@ -334,7 +276,6 @@ class ModelDisplayer {
     return new Promise((resolve, reject) => {
       loader.load('./models/' + filename, gltf => {
         let model = gltf.scene
-        // model.scale.set(1, 1, 2)
 
         const box = new THREE.Box3().setFromObject(model)
         const size = box.getSize(new THREE.Vector3()).length()
