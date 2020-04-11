@@ -247,6 +247,38 @@ class ModelDisplayer {
   }
 
   /**
+   * Shows spheres around the motion trigger regions
+   */
+  displayMotionRegions () {
+    var geometry = new THREE.SphereGeometry(20, 32, 32)
+    var material = new THREE.MeshBasicMaterial({ color: 0x3236a8 })
+    material.transparent = true
+    material.opacity = 0.5
+    var circle3 = new THREE.Mesh(geometry, material)
+    circle3.position.x = this._getCentre().x - 50
+    circle3.position.y = this._getCentre().y + 10
+    this._scene.add(circle3)
+
+    geometry = new THREE.SphereGeometry(10, 32, 32)
+    var circle1 = new THREE.Mesh(geometry, material)
+    circle1.position.x = this._getCentre().x - 5
+    circle1.position.y = this._getCentre().y + 50
+    this._scene.add(circle1)
+
+    geometry = new THREE.SphereGeometry(15, 32, 32)
+    var circle2 = new THREE.Mesh(geometry, material)
+    circle2.position.x = this._getCentre().x + 30
+    circle2.position.y = this._getCentre().y + 50
+    this._scene.add(circle2)
+
+    geometry = new THREE.SphereGeometry(10, 32, 32)
+    var circle4 = new THREE.Mesh(geometry, material)
+    circle4.position.x = this._getCentre().x + 60
+    circle4.position.y = this._getCentre().y + 40
+    this._scene.add(circle4)
+  }
+
+  /**
    * Converts a 3D point in three.js scene to its respective 2D coordinates on the webpage
    * @param {number} x x-coordinate
    * @param {number} y y-coordinate

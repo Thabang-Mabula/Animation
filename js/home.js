@@ -1,11 +1,12 @@
 import { ModelDisplayer } from './modelLoader.js'
 
 var modelDisplayArea = $('.model-area')
-var modelFileName = 'character.glb'
+var modelFileName = 'char_2.glb'
 var modelDisplayer = new ModelDisplayer(modelFileName, modelDisplayArea)
 
 $(document).ready(async function () {
   await modelDisplayer.displayModelOnWebpage(modelFileName, modelDisplayArea)
+  modelDisplayer.displayMotionRegions()
 
   $('body').mousemove(function (event) {
     let mousePosition = { x: event.pageX, y: event.pageY }
