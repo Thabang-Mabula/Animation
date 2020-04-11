@@ -7,7 +7,7 @@ import {
   PointLight,
   Vector3,
   Box3
-} from './three.module.js'
+} from './libs/three.module.js'
 
 // Global reference to the loaded model so that other functions can manipulate it
 
@@ -274,7 +274,7 @@ class ModelDisplayer {
     var loader = new THREE.GLTFLoader()
 
     return new Promise((resolve, reject) => {
-      loader.load('./models/' + filename, gltf => {
+      loader.load('../models/' + filename, gltf => {
         let model = gltf.scene
 
         const box = new THREE.Box3().setFromObject(model)
