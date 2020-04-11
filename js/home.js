@@ -11,14 +11,13 @@ $(document).ready(async function () {
     let mousePosition = { x: event.pageX, y: event.pageY }
     let triggerRegionPoints = modelDisplayer.getTriggerRegions()
     let activationRegion = modelDisplayer.getActivationRegion()
-    let length = 4
 
     // Check first if the mouse is outside of the activationRegion
     // If so, play an animaiton to revert the character to its original position
     if (!isWithinTriggerRegion(mousePosition, activationRegion)) {
       modelDisplayer.revertToOriginalPosition()
     } else {
-      for (let i = 0; i < length; i++) {
+      for (let i = 0; i < triggerRegionPoints.length; i++) {
         if (isWithinTriggerRegion(mousePosition, triggerRegionPoints[i])) {
           modelDisplayer.playAnimation(i)
         }
