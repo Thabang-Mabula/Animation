@@ -76,6 +76,7 @@ class ModelDisplayer {
     this._mixer = {}
     this._model = {}
     this._scene = new Scene()
+    this._scene.background = new THREE.Color(0x000000)
     this._camera = createCamera()
     this._renderer = createRenderer()
     this._enableResizeAdjust()
