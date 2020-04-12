@@ -16,6 +16,16 @@ class CursorObject {
         model.position.y += (model.position.y - this._center.y)
         model.position.z += (model.position.z - this._center.z)
 
+        model.traverse(function (child) {
+          if (child.isMesh) {
+            // switch the material here - you'll need to take the settings from the
+            // original material, or create your own new settings, something like:
+            const oldMat = child.material
+
+            child.material = new THREE.MeshPhongMaterial({ color: new THREE.Color(0xfcba03) })
+          }
+        })
+
         scene.add(model)
         resolve(gltf)
       }, undefined, function (error) {
