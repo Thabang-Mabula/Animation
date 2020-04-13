@@ -12,7 +12,7 @@ fixWindowSize(1200, 900)
 $(document).ready(async function () {
   await modelDisplayer.displayModelOnWebpage(modelFileName, modelDisplayArea)
   await cursorObject.loadCursorObjectToScene(cursorFileName, modelDisplayer.getScene())
-  modelDisplayer.displayMotionRegions()
+  // modelDisplayer.displayMotionRegions()
 
   $('body').mousemove(function (event) {
     let mousePosition = { x: event.pageX, y: event.pageY }

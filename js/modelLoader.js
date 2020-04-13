@@ -58,7 +58,7 @@ let createCamera = () => {
  */
 let createRenderer = () => {
   let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-  renderer.setSize(window.innerWidth, window.innerHeight)
+  renderer.setSize(1200, 900)
   return renderer
 }
 
@@ -79,7 +79,7 @@ class ModelDisplayer {
     this._scene.background = new THREE.Color(0x000000)
     this._camera = createCamera()
     this._renderer = createRenderer()
-    this._enableResizeAdjust()
+    this._enableResizeAdjust(displayDOMElement.width, displayDOMElement.height)
     this._center = {}
     this._timeOff = new Date()
     this._currentAction = null
@@ -321,13 +321,14 @@ class ModelDisplayer {
     return new Promise((resolve, reject) => {
       loader.load('../models/' + filename, gltf => {
         let model = gltf.scene
+        model.scale.set(24, 24, 24)
 
         const box = new THREE.Box3().setFromObject(model)
         const size = box.getSize(new THREE.Vector3()).length()
         this._center = box.getCenter(new THREE.Vector3())
 
-        model.position.x += (model.position.x - this._center.x)
-        model.position.y += (model.position.y - this._center.y)
+        model.position.x += (model.position.x - this._center.x) - 160
+        model.position.y += (model.position.y - this._center.y) - 500
         model.position.z += (model.position.z - this._center.z)
 
         this._camera.near = size / 100
@@ -357,10 +358,8 @@ class ModelDisplayer {
   /**
    * Enables to model to resize as the browser window size changes
    */
-  _enableResizeAdjust () {
+  _enableResizeAdjust (width, height) {
     window.addEventListener('resize', () => {
-      let width = window.innerWidth
-      let height = window.innerHeight
       this._renderer.setSize(width, height)
       this._camera.aspect = width / height
       this._camera.updateProjectionMatrix()
