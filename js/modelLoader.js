@@ -86,6 +86,18 @@ class ModelDisplayer {
     this._isAnimationPlayable = true
   }
 
+  getScene () {
+    return this._scene
+  }
+
+  getCamera () {
+    return this._camera
+  }
+
+  getRenderer () {
+    return this._renderer
+  }
+
   /**
    * Plays a specified animation of the model
    * @param {Number} index Index of the animation in the array of animations stores with the model

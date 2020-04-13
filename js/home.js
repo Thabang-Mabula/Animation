@@ -1,15 +1,22 @@
 import { ModelDisplayer } from './modelLoader.js'
+import { CursorObject } from './cursorObject.js'
 
 var modelDisplayArea = $('.model-area')
 var modelFileName = 'char_2.glb'
+var cursorFileName = 'hand_2.glb'
 var modelDisplayer = new ModelDisplayer(modelFileName, modelDisplayArea)
+var cursorObject = new CursorObject()
+
+fixWindowSize(1200, 900)
 
 $(document).ready(async function () {
   await modelDisplayer.displayModelOnWebpage(modelFileName, modelDisplayArea)
+  await cursorObject.loadCursorObjectToScene(cursorFileName, modelDisplayer.getScene())
   modelDisplayer.displayMotionRegions()
 
   $('body').mousemove(function (event) {
     let mousePosition = { x: event.pageX, y: event.pageY }
+    cursorObject.setCursorPosition(mousePosition, modelDisplayer.getCamera(), modelDisplayer.getRenderer())
     let triggerRegionPoints = modelDisplayer.getTriggerRegions()
     let activationRegion = modelDisplayer.getActivationRegion()
 
@@ -57,4 +64,10 @@ function euclidianDistance (p1, p2) {
 function animate () {
   requestAnimationFrame(animate)
   modelDisplayer.animate()
+}
+
+function fixWindowSize (length, height) {
+  $(window).resize(function () {
+    window.resizeTo(length, height)
+  })
 }
