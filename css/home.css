@@ -5,6 +5,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor:url('../img/AIBrain.jpg'), move;
 }
 
 .web-content {
@@ -17,9 +18,15 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
+    /* cursor:url('../img/AIBrain.jpg'), move; */
+}
+
+body {
+    cursor: none;
 }
 
 .model-area {
     width: 100%;
     height: 100%;
+    cursor:url('../img/AIBrain.jpg'), move;
 }
