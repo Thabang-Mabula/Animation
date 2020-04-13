@@ -336,8 +336,6 @@ class ModelDisplayer {
 
         model.lookAt(this._camera.position)
 
-        var axesHelper = new THREE.AxesHelper(5)
-        this._scene.add(axesHelper)
         this._scene.add(model)
         resolve(gltf)
       }, undefined, function (error) {
