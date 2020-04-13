@@ -79,7 +79,7 @@ class ModelDisplayer {
     this._scene.background = new THREE.Color(0x000000)
     this._camera = createCamera()
     this._renderer = createRenderer()
-    this._enableResizeAdjust()
+    this._enableResizeAdjust(displayDOMElement.width, displayDOMElement.height)
     this._center = {}
     this._timeOff = new Date()
     this._currentAction = null
@@ -357,10 +357,8 @@ class ModelDisplayer {
   /**
    * Enables to model to resize as the browser window size changes
    */
-  _enableResizeAdjust () {
+  _enableResizeAdjust (width, height) {
     window.addEventListener('resize', () => {
-      let width = 1200
-      let height = 900
       this._renderer.setSize(width, height)
       this._camera.aspect = width / height
       this._camera.updateProjectionMatrix()
