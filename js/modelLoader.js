@@ -58,7 +58,7 @@ let createCamera = () => {
  */
 let createRenderer = () => {
   let renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-  renderer.setSize(window.innerWidth, window.innerHeight)
+  renderer.setSize(1200, 900)
   return renderer
 }
 
@@ -359,8 +359,8 @@ class ModelDisplayer {
    */
   _enableResizeAdjust () {
     window.addEventListener('resize', () => {
-      let width = window.innerWidth
-      let height = window.innerHeight
+      let width = 1200
+      let height = 900
       this._renderer.setSize(width, height)
       this._camera.aspect = width / height
       this._camera.updateProjectionMatrix()
