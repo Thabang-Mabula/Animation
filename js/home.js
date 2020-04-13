@@ -16,6 +16,7 @@ $(document).ready(async function () {
 
   $('body').mousemove(function (event) {
     let mousePosition = { x: event.pageX, y: event.pageY }
+    cursorObject.setCursorPosition(mousePosition, modelDisplayer.getCamera(), modelDisplayer.getRenderer())
     let triggerRegionPoints = modelDisplayer.getTriggerRegions()
     let activationRegion = modelDisplayer.getActivationRegion()
 
