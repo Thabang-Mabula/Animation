@@ -55,7 +55,7 @@ class CursorObject {
 
       let clip = this._animations[INDEX_OF_CLICK_ANIMATION]
       this._currentAction = this._mixer.clipAction(clip)
-      this._currentAction.setLoop(THREE.LoopPingPong)
+      this._currentAction.setLoop(THREE.LoopOnce)
       // this._currentAction.clampWhenFinished = true
       this._currentAction.paused = false
       this._currentAction.enabled = true

@@ -33,8 +33,10 @@ $(document).ready(async function () {
     }
   })
 
-  modelDisplayArea.click(() => {
-    // cursorObject.playClickAnimation()
+  $(window).click((e) => {
+    e.preventDefault()
+    cursorObject.playClickAnimation()
+    console.log('Click animation should have played')
   })
 
   $(window).scroll((e) => {
