@@ -3,8 +3,9 @@ class CursorObject {
     this._model = {}
     this._clock = new THREE.Clock()
     this._mixer = {}
-    this._currentAction = {}
+    this._currentAction = null
     this._pointLight = new THREE.PointLight(0xffffff, 0.5)
+    this._currentClipDuration = 0
   }
 
   loadCursorObjectToScene (filename, scene) {
@@ -54,11 +55,9 @@ class CursorObject {
       const INDEX_OF_CLICK_ANIMATION = 1
 
       let clip = this._animations[INDEX_OF_CLICK_ANIMATION]
+      this._currentClipDuration = clip.duration
       this._currentAction = this._mixer.clipAction(clip)
       this._currentAction.setLoop(THREE.LoopOnce)
-      // this._currentAction.clampWhenFinished = true
-      this._currentAction.paused = false
-      this._currentAction.enabled = true
       this._currentAction.timeScale = 1
       this._currentAction.play()
     }
@@ -68,17 +67,23 @@ class CursorObject {
     if (this._isActionPlayable()) {
       const INDEX_OF_SCROLL_ANIMATION = 3
       let clip = this._animations[INDEX_OF_SCROLL_ANIMATION]
+      this._currentClipDuration = clip.duration
       this._currentAction = this._mixer.clipAction(clip)
-      this._currentAction.setLoop(THREE.LoopPingPong)
-      // this._currentAction.clampWhenFinished = true
-      this._currentAction.paused = false
-      this._currentAction.enabled = true
+      this._currentAction.setLoop(THREE.LoopOnce)
       this._currentAction.timeScale = 1
       this._currentAction.play()
     }
   }
   _isActionPlayable () {
-    let shouldPlay = true
+    let shouldPlay = false
+
+    if (this._currentAction == null) {
+      shouldPlay = true
+    } else if (this._currentAction.time === this._currentClipDuration) {
+      shouldPlay = true
+      this._currentAction.reset()
+    }
+
     return shouldPlay
   }
 
