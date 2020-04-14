@@ -34,11 +34,11 @@ $(document).ready(async function () {
   })
 
   modelDisplayArea.click(() => {
-    cursorObject.playClickAnimation()
+    // cursorObject.playClickAnimation()
   })
 
   $(window).scroll(() => {
-    cursorObject.playScrollAnimation()
+    // cursorObject.playScrollAnimation()
   })
 
   animate()

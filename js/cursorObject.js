@@ -4,6 +4,7 @@ class CursorObject {
     this._clock = new THREE.Clock()
     this._mixer = {}
     this._currentAction = {}
+    this._pointLight = new THREE.PointLight(0xffffff, 0.5)
   }
 
   loadCursorObjectToScene (filename, scene) {
@@ -11,7 +12,7 @@ class CursorObject {
     return new Promise((resolve, reject) => {
       loader.load('../models/' + filename, gltf => {
         let model = gltf.scene
-        model.scale.set(1, 1, 1)
+        model.scale.set(0.5, 0.5, 0.5)
 
         const box = new THREE.Box3().setFromObject(model)
         this._center = box.getCenter(new THREE.Vector3())
@@ -30,6 +31,7 @@ class CursorObject {
 
         this._model = model
         scene.add(this._model)
+        scene.add(this._pointLight)
         this._mixer = new THREE.AnimationMixer(this._model)
         this._animations = gltf.animations
 
@@ -96,6 +98,7 @@ class CursorObject {
   animate () {
     let delta = this._clock.getDelta()
     this._mixer.update(delta)
+    this._pointLight.position.set(this._model.position.x - 500, this._model.position.y + 1000, this._model.position.z - 500)
   }
 }
 
