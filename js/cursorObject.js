@@ -21,25 +21,12 @@ class CursorObject {
         model.position.y += (model.position.y - this._center.y)
         model.position.z += (model.position.z - this._center.z)
 
-        // let plane = new THREE.Plane(new THREE.Vector3(-1, -1, -1), 100)
-        // model.rotateOnAxis(plane, -Math.PI / 3)
-        // model.rotateY(Math.PI / 1.5)
-        // model.rotateZ(Math.PI / 4)
-        // model.rotateX(-Math.PI / 3)
-        // model.rotation.z += Math.PI / 2
-        // model.rotation.z += Math.PI / 2
-
         this._model = model
         scene.add(this._model)
         scene.add(this._pointLight)
         this._mixer = new THREE.AnimationMixer(this._model)
         this._animations = gltf.animations
 
-        // model.traverse(function (child) {
-        //   if (child.isMesh) {
-        //     child.material = new THREE.MeshPhongMaterial({ color: new THREE.Color(0xfcba03), morphTargets: true })
-        //   }
-        // })
         resolve(gltf)
       }, undefined, function (error) {
         console.error(error)

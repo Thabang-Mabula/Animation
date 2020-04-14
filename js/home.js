@@ -37,8 +37,9 @@ $(document).ready(async function () {
     // cursorObject.playClickAnimation()
   })
 
-  $(window).scroll(() => {
-    // cursorObject.playScrollAnimation()
+  $(window).scroll((e) => {
+    e.preventDefault()
+    cursorObject.playScrollAnimation()
   })
 
   animate()
