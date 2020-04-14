@@ -33,6 +33,14 @@ $(document).ready(async function () {
     }
   })
 
+  modelDisplayArea.click(() => {
+    cursorObject.playClickAnimation()
+  })
+
+  $(window).scroll(() => {
+    cursorObject.playScrollAnimation()
+  })
+
   animate()
 })
 
@@ -64,6 +72,7 @@ function euclidianDistance (p1, p2) {
 function animate () {
   requestAnimationFrame(animate)
   modelDisplayer.animate()
+  cursorObject.animate()
 }
 
 function fixWindowSize (length, height) {

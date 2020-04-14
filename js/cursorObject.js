@@ -1,6 +1,9 @@
 class CursorObject {
   constructor () {
     this._model = {}
+    this._clock = new THREE.Clock()
+    this._mixer = {}
+    this._currentAction = {}
   }
 
   loadCursorObjectToScene (filename, scene) {
@@ -25,14 +28,16 @@ class CursorObject {
         // model.rotation.z += Math.PI / 2
         // model.rotation.z += Math.PI / 2
 
-        model.traverse(function (child) {
-          if (child.isMesh) {
-            child.material = new THREE.MeshPhongMaterial({ color: new THREE.Color(0xfcba03) })
-          }
-        })
-
         this._model = model
         scene.add(this._model)
+        this._mixer = new THREE.AnimationMixer(this._model)
+        this._animations = gltf.animations
+
+        // model.traverse(function (child) {
+        //   if (child.isMesh) {
+        //     child.material = new THREE.MeshPhongMaterial({ color: new THREE.Color(0xfcba03), morphTargets: true })
+        //   }
+        // })
         resolve(gltf)
       }, undefined, function (error) {
         console.error(error)
@@ -53,6 +58,44 @@ class CursorObject {
     let plane = new THREE.Plane(new THREE.Vector3(-1, -1, -1), 100)
     raycaster.ray.intersectPlane(plane, intersectPoint)
     this._model.position.copy(intersectPoint.multiplyScalar(2))
+  }
+
+  playClickAnimation () {
+    if (this._isActionPlayable()) {
+      const INDEX_OF_CLICK_ANIMATION = 1
+
+      let clip = this._animations[INDEX_OF_CLICK_ANIMATION]
+      this._currentAction = this._mixer.clipAction(clip)
+      this._currentAction.setLoop(THREE.LoopPingPong)
+      // this._currentAction.clampWhenFinished = true
+      this._currentAction.paused = false
+      this._currentAction.enabled = true
+      this._currentAction.timeScale = 1
+      this._currentAction.play()
+    }
+  }
+
+  playScrollAnimation () {
+    if (this._isActionPlayable()) {
+      const INDEX_OF_SCROLL_ANIMATION = 3
+      let clip = this._animations[INDEX_OF_SCROLL_ANIMATION]
+      this._currentAction = this._mixer.clipAction(clip)
+      this._currentAction.setLoop(THREE.LoopPingPong)
+      // this._currentAction.clampWhenFinished = true
+      this._currentAction.paused = false
+      this._currentAction.enabled = true
+      this._currentAction.timeScale = 1
+      this._currentAction.play()
+    }
+  }
+  _isActionPlayable () {
+    let shouldPlay = true
+    return shouldPlay
+  }
+
+  animate () {
+    let delta = this._clock.getDelta()
+    this._mixer.update(delta)
   }
 }
 
