@@ -1,6 +1,11 @@
 class CursorObject {
   constructor () {
     this._model = {}
+    this._clock = new THREE.Clock()
+    this._mixer = {}
+    this._currentAction = null
+    this._pointLight = new THREE.PointLight(0xffffff, 0.5)
+    this._currentClipDuration = 0
   }
 
   loadCursorObjectToScene (filename, scene) {
@@ -8,7 +13,7 @@ class CursorObject {
     return new Promise((resolve, reject) => {
       loader.load('../models/' + filename, gltf => {
         let model = gltf.scene
-        model.scale.set(1, 1, 1)
+        model.scale.set(0.5, 0.5, 0.5)
 
         const box = new THREE.Box3().setFromObject(model)
         this._center = box.getCenter(new THREE.Vector3())
@@ -17,22 +22,12 @@ class CursorObject {
         model.position.y += (model.position.y - this._center.y)
         model.position.z += (model.position.z - this._center.z)
 
-        // let plane = new THREE.Plane(new THREE.Vector3(-1, -1, -1), 100)
-        // model.rotateOnAxis(plane, -Math.PI / 3)
-        // model.rotateY(Math.PI / 1.5)
-        // model.rotateZ(Math.PI / 4)
-        // model.rotateX(-Math.PI / 3)
-        // model.rotation.z += Math.PI / 2
-        // model.rotation.z += Math.PI / 2
-
-        model.traverse(function (child) {
-          if (child.isMesh) {
-            child.material = new THREE.MeshPhongMaterial({ color: new THREE.Color(0xfcba03) })
-          }
-        })
-
         this._model = model
         scene.add(this._model)
+        scene.add(this._pointLight)
+        this._mixer = new THREE.AnimationMixer(this._model)
+        this._animations = gltf.animations
+
         resolve(gltf)
       }, undefined, function (error) {
         console.error(error)
@@ -53,6 +48,49 @@ class CursorObject {
     let plane = new THREE.Plane(new THREE.Vector3(-1, -1, -1), 100)
     raycaster.ray.intersectPlane(plane, intersectPoint)
     this._model.position.copy(intersectPoint.multiplyScalar(2))
+  }
+
+  playClickAnimation () {
+    if (this._isActionPlayable()) {
+      const INDEX_OF_CLICK_ANIMATION = 1
+
+      let clip = this._animations[INDEX_OF_CLICK_ANIMATION]
+      this._currentClipDuration = clip.duration
+      this._currentAction = this._mixer.clipAction(clip)
+      this._currentAction.setLoop(THREE.LoopOnce)
+      this._currentAction.timeScale = 1
+      this._currentAction.play()
+    }
+  }
+
+  playScrollAnimation () {
+    if (this._isActionPlayable()) {
+      const INDEX_OF_SCROLL_ANIMATION = 3
+      let clip = this._animations[INDEX_OF_SCROLL_ANIMATION]
+      this._currentClipDuration = clip.duration
+      this._currentAction = this._mixer.clipAction(clip)
+      this._currentAction.setLoop(THREE.LoopOnce)
+      this._currentAction.timeScale = 1
+      this._currentAction.play()
+    }
+  }
+  _isActionPlayable () {
+    let shouldPlay = false
+
+    if (this._currentAction == null) {
+      shouldPlay = true
+    } else if (this._currentAction.time === this._currentClipDuration) {
+      shouldPlay = true
+      this._currentAction.reset()
+    }
+
+    return shouldPlay
+  }
+
+  animate () {
+    let delta = this._clock.getDelta()
+    this._mixer.update(delta)
+    this._pointLight.position.set(this._model.position.x - 500, this._model.position.y + 1000, this._model.position.z - 500)
   }
 }
 

@@ -179,7 +179,7 @@ class ModelDisplayer {
 
       // Add point light
       var pointLight = new PointLight(0xababab, 1)
-      pointLight.position.set(1000, 1000, 0)
+      pointLight.position.set(100, -100, 100)
       this._scene.add(pointLight)
 
       // Add the model
