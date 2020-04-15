@@ -1,6 +1,6 @@
 const AnimationNameConstants = {
-  TOUCH: 'TOUCH',
-  NONE: 'NONE'
+  TOUCH: 'touch',
+  NONE: 'none'
 }
 
 export { AnimationNameConstants }

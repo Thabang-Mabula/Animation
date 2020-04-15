@@ -1,5 +1,6 @@
 import { ModelDisplayer } from './modelLoader.js'
 import { CursorObject } from './cursorObject.js'
+import { AnimationNameConstants } from './animationConstants.js'
 
 var modelDisplayArea = $('.model-area')
 var modelFileName = 'char_2.glb'
@@ -22,7 +23,13 @@ $(document).ready(async function () {
     let triggerRegionPoints = modelDisplayer.getTriggerRegions()
     let activationRegion = modelDisplayer.getActivationRegion()
 
-    cursorObject.getModelAnimation()
+    const animationToBePlayed = cursorObject.getModelAnimation()
+    if (animationToBePlayed === AnimationNameConstants.NONE) {
+      modelDisplayer.revertToOriginalPosition()
+    } else {
+      modelDisplayer.playAnimation(animationToBePlayed)
+      console.log('An animation should have played')
+    }
 
     // Check first if the mouse is outside of the activationRegion
     // If so, play an animaiton to revert the character to its original position

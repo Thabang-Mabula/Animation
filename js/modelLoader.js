@@ -102,7 +102,7 @@ class ModelDisplayer {
    * Plays a specified animation of the model
    * @param {Number} index Index of the animation in the array of animations stores with the model
    */
-  playAnimation (index) {
+  playAnimation (clipName) {
     if (this._isActionPlayable()) {
       let isClipAtStartingPoint = false
 
@@ -113,7 +113,7 @@ class ModelDisplayer {
       }
 
       if (isClipAtStartingPoint) {
-        let clip = this._model.animations[index]
+        let clip = THREE.AnimationClip.findByName(this._model.animations, clipName)
         this._currentAction = this._mixer.clipAction(clip)
         this._currentAction.setLoop(THREE.LoopOnce)
         this._currentAction.clampWhenFinished = true

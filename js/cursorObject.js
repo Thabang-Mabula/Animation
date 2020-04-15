@@ -96,15 +96,15 @@ class CursorObject {
 
   getModelAnimation () {
     const TRIGGER_REGION_RADIUS = 5
+    let animation = AnimationNameConstants.NONE
 
     this._trigger_centres.forEach((value, key) => {
       if (this._model.position.distanceTo(value) <= TRIGGER_REGION_RADIUS) {
-        console.log(`Should have played animation: ${key}`)
-        return key
+        animation = key
       }
     })
 
-    return AnimationNameConstants.NONE
+    return animation
   }
 
   animate () {
