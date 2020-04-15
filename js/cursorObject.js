@@ -1,14 +1,20 @@
+import { AnimationNameConstants } from './animationConstants.js'
 class CursorObject {
-  constructor () {
+  constructor (scene) {
     this._model = {}
     this._clock = new THREE.Clock()
     this._mixer = {}
     this._currentAction = null
     this._pointLight = new THREE.PointLight(0xffffff, 0.5)
     this._currentClipDuration = 0
+    this._scene = scene
+
+    this._trigger_centres = new Map([
+      [AnimationNameConstants.TOUCH, new THREE.Vector3(70, 65, 65)]
+    ])
   }
 
-  loadCursorObjectToScene (filename, scene) {
+  loadCursorObjectToScene (filename) {
     var loader = new THREE.GLTFLoader()
     return new Promise((resolve, reject) => {
       loader.load('../models/' + filename, gltf => {
@@ -23,8 +29,8 @@ class CursorObject {
         model.position.z += (model.position.z - this._center.z)
 
         this._model = model
-        scene.add(this._model)
-        scene.add(this._pointLight)
+        this._scene.add(this._model)
+        this._scene.add(this._pointLight)
         this._mixer = new THREE.AnimationMixer(this._model)
         this._animations = gltf.animations
 
@@ -59,6 +65,7 @@ class CursorObject {
       this._currentAction = this._mixer.clipAction(clip)
       this._currentAction.setLoop(THREE.LoopOnce)
       this._currentAction.timeScale = 1
+      console.log(this._model.position)
       this._currentAction.play()
     }
   }
@@ -85,6 +92,19 @@ class CursorObject {
     }
 
     return shouldPlay
+  }
+
+  getModelAnimation () {
+    const TRIGGER_REGION_RADIUS = 5
+
+    this._trigger_centres.forEach((value, key) => {
+      if (this._model.position.distanceTo(value) <= TRIGGER_REGION_RADIUS) {
+        console.log(`Should have played animation: ${key}`)
+        return key
+      }
+    })
+
+    return AnimationNameConstants.NONE
   }
 
   animate () {

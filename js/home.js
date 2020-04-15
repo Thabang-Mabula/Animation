@@ -3,34 +3,38 @@ import { CursorObject } from './cursorObject.js'
 
 var modelDisplayArea = $('.model-area')
 var modelFileName = 'char_2.glb'
-var cursorFileName = 'hand_2.glb'
+var cursorFileName = 'hand.glb'
 var modelDisplayer = new ModelDisplayer(modelFileName, modelDisplayArea)
-var cursorObject = new CursorObject()
+var cursorObject = new CursorObject(modelDisplayer.getScene())
 
 fixWindowSize(1200, 900)
 
 $(document).ready(async function () {
   await modelDisplayer.displayModelOnWebpage(modelFileName, modelDisplayArea)
-  await cursorObject.loadCursorObjectToScene(cursorFileName, modelDisplayer.getScene())
+  await cursorObject.loadCursorObjectToScene(cursorFileName)
   // modelDisplayer.displayMotionRegions()
+  // cursorObject.dispalyTriggerRegions()
 
   $('body').mousemove(function (event) {
     let mousePosition = { x: event.pageX, y: event.pageY }
     cursorObject.setCursorPosition(mousePosition, modelDisplayer.getCamera(), modelDisplayer.getRenderer())
+
     let triggerRegionPoints = modelDisplayer.getTriggerRegions()
     let activationRegion = modelDisplayer.getActivationRegion()
 
+    cursorObject.getModelAnimation()
+
     // Check first if the mouse is outside of the activationRegion
     // If so, play an animaiton to revert the character to its original position
-    if (!isWithinTriggerRegion(mousePosition, activationRegion)) {
-      modelDisplayer.revertToOriginalPosition()
-    } else {
-      for (let i = 0; i < triggerRegionPoints.length; i++) {
-        if (isWithinTriggerRegion(mousePosition, triggerRegionPoints[i])) {
-          modelDisplayer.playAnimation(i)
-        }
-      }
-    }
+    // if (!isWithinTriggerRegion(mousePosition, activationRegion)) {
+    //   modelDisplayer.revertToOriginalPosition()
+    // } else {
+    //   for (let i = 0; i < triggerRegionPoints.length; i++) {
+    //     if (isWithinTriggerRegion(mousePosition, triggerRegionPoints[i])) {
+    //       modelDisplayer.playAnimation(i)
+    //     }
+    //   }
+    // }
   })
 
   $(window).click((e) => {
