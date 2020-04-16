@@ -28,7 +28,7 @@ $(document).ready(async function () {
       modelDisplayer.revertToOriginalPosition()
     } else {
       modelDisplayer.playAnimation(animationToBePlayed)
-      console.log('An animation should have played')
+      cursorObject.playAnimation(animationToBePlayed)
     }
 
     // Check first if the mouse is outside of the activationRegion

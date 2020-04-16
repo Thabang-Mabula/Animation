@@ -3,6 +3,8 @@ const AnimationNameConstants = {
   SHOES: 'shoes',
   HEAD: 'head',
   LA: 'LA',
+  SCROLL: 'scroll',
+  CLICK: 'click',
   NONE: 'none'
 }
 

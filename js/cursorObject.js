@@ -1,4 +1,7 @@
 import { AnimationNameConstants } from './animationConstants.js'
+
+const TRIGGER_REGION_RADIUS = 5
+
 class CursorObject {
   constructor (scene) {
     this._model = {}
@@ -97,8 +100,19 @@ class CursorObject {
     return shouldPlay
   }
 
+  playAnimation (clipName) {
+    if ((clipName === AnimationNameConstants.LA || clipName === AnimationNameConstants.SCROLL ||
+      clipName === AnimationNameConstants.CLICK) && this._isActionPlayable()) {
+      let clip = THREE.AnimationClip.findByName(this._animations, clipName)
+      this._currentClipDuration = clip.duration
+      this._currentAction = this._mixer.clipAction(clip)
+      this._currentAction.setLoop(THREE.LoopOnce)
+      this._currentAction.timeScale = 1
+      this._currentAction.play()
+    }
+  }
+
   getModelAnimation () {
-    const TRIGGER_REGION_RADIUS = 5
     let animation = AnimationNameConstants.NONE
 
     this._trigger_centres.forEach((value, key) => {
