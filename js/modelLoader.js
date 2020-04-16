@@ -102,7 +102,7 @@ class ModelDisplayer {
    * Plays a specified animation of the model
    * @param {Number} index Index of the animation in the array of animations stores with the model
    */
-  playAnimation (index) {
+  playAnimation (clipName) {
     if (this._isActionPlayable()) {
       let isClipAtStartingPoint = false
 
@@ -113,7 +113,7 @@ class ModelDisplayer {
       }
 
       if (isClipAtStartingPoint) {
-        let clip = this._model.animations[index]
+        let clip = THREE.AnimationClip.findByName(this._model.animations, clipName)
         this._currentAction = this._mixer.clipAction(clip)
         this._currentAction.setLoop(THREE.LoopOnce)
         this._currentAction.clampWhenFinished = true
@@ -266,29 +266,30 @@ class ModelDisplayer {
     var geometry = new THREE.SphereGeometry(20, 32, 32)
     var material = new THREE.MeshBasicMaterial({ color: 0x3236a8 })
     material.transparent = true
-    material.opacity = 0.5
+    material.opacity = 1
     var circle3 = new THREE.Mesh(geometry, material)
     circle3.position.x = this._getCentre().x - 50
     circle3.position.y = this._getCentre().y + 10
-    this._scene.add(circle3)
+    // this._scene.add(circle3)
 
     geometry = new THREE.SphereGeometry(10, 32, 32)
     var circle1 = new THREE.Mesh(geometry, material)
-    circle1.position.x = this._getCentre().x - 5
-    circle1.position.y = this._getCentre().y + 50
+    circle1.position.x = 69
+    circle1.position.y = 66
+    circle1.position.z = 64
     this._scene.add(circle1)
 
     geometry = new THREE.SphereGeometry(15, 32, 32)
     var circle2 = new THREE.Mesh(geometry, material)
     circle2.position.x = this._getCentre().x + 30
     circle2.position.y = this._getCentre().y + 50
-    this._scene.add(circle2)
+    // this._scene.add(circle2)
 
     geometry = new THREE.SphereGeometry(10, 32, 32)
     var circle4 = new THREE.Mesh(geometry, material)
     circle4.position.x = this._getCentre().x + 60
     circle4.position.y = this._getCentre().y + 40
-    this._scene.add(circle4)
+    // this._scene.add(circle4)
   }
 
   /**
