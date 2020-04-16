@@ -46,12 +46,12 @@ $(document).ready(async function () {
 
   $(window).click((e) => {
     e.preventDefault()
-    cursorObject.playClickAnimation()
+    cursorObject.playAnimation(AnimationNameConstants.CLICK)
   })
 
   $(window).scroll((e) => {
     e.preventDefault()
-    cursorObject.playScrollAnimation()
+    cursorObject.playAnimation(AnimationNameConstants.SCROLL)
   })
 
   animate()
