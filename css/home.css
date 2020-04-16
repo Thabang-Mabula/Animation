@@ -17,6 +17,9 @@ html, body {
     margin: 0;
     padding: 0;
     /* cursor:url('../img/AIBrain.jpg'), move; */
+    cursor: none;
+    pointer-events: auto;
+    
 }
 
 .model-area {
@@ -25,5 +28,4 @@ html, body {
     position: absolute;
     width: 1200px;
     height: 900px;
-    cursor: none;
 }
