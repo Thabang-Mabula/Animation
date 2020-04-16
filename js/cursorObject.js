@@ -12,7 +12,8 @@ class CursorObject {
     this._trigger_centres = new Map([
       [AnimationNameConstants.TOUCH, new THREE.Vector3(70, 65, 65)],
       [AnimationNameConstants.SHOES, new THREE.Vector3(115, 50, 40)],
-      [AnimationNameConstants.HEAD, new THREE.Vector3(95, 60, 45)]
+      [AnimationNameConstants.HEAD, new THREE.Vector3(95, 60, 45)],
+      [AnimationNameConstants.LA, new THREE.Vector3(65, 50, 85)]
     ])
   }
 
