@@ -77,7 +77,10 @@ class CursorObject {
 
   playAnimation (clipName) {
     if ((clipName === AnimationNameConstants.LA || clipName === AnimationNameConstants.SCROLL ||
-      clipName === AnimationNameConstants.CLICK) && this._isActionPlayable()) {
+      clipName === AnimationNameConstants.CLICK || clipName === AnimationNameConstants.TOUCH) && 
+      this._isActionPlayable()) {
+
+      if (clipName === AnimationNameConstants.TOUCH) { clipName =  AnimationNameConstants.INDEX_FINGER } 
       let clip = THREE.AnimationClip.findByName(this._animations, clipName)
       this._currentClipDuration = clip.duration
       this._currentAction = this._mixer.clipAction(clip)

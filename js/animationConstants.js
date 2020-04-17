@@ -5,7 +5,9 @@ const AnimationNameConstants = {
   LA: 'LA',
   SCROLL: 'scroll',
   CLICK: 'click',
-  NONE: 'none'
+  NONE: 'none',
+  INDEX_FINGER: 'INDEX-FINGER'
+
 }
 
 export { AnimationNameConstants }

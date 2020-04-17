@@ -52,6 +52,7 @@ $(document).ready(async function () {
   $(window).scroll((e) => {
     e.preventDefault()
     cursorObject.playAnimation(AnimationNameConstants.SCROLL)
+    e.stopPropagation()
   })
 
   animate()
