@@ -1,7 +1,7 @@
 import { AnimationNameConstants } from './animationConstants.js'
 
-const TRIGGER_REGION_RADIUS = 5
-
+const TRIGGER_REGION_RADIUS = 7
+const TIME_SCALE_FACTOR = 0.75
 class CursorObject {
   constructor (scene) {
     this._model = {}
@@ -77,10 +77,9 @@ class CursorObject {
 
   playAnimation (clipName) {
     if ((clipName === AnimationNameConstants.LA || clipName === AnimationNameConstants.SCROLL ||
-      clipName === AnimationNameConstants.CLICK || clipName === AnimationNameConstants.TOUCH) && 
+      clipName === AnimationNameConstants.CLICK || clipName === AnimationNameConstants.TOUCH) &&
       this._isActionPlayable()) {
-
-      if (clipName === AnimationNameConstants.TOUCH) { clipName =  AnimationNameConstants.INDEX_FINGER } 
+      if (clipName === AnimationNameConstants.TOUCH) { clipName = AnimationNameConstants.INDEX_FINGER }
       let clip = THREE.AnimationClip.findByName(this._animations, clipName)
       this._currentClipDuration = clip.duration
       this._currentAction = this._mixer.clipAction(clip)
@@ -103,7 +102,7 @@ class CursorObject {
   }
 
   animate () {
-    let delta = this._clock.getDelta()
+    let delta = this._clock.getDelta() * TIME_SCALE_FACTOR
     this._mixer.update(delta)
     this._pointLight.position.set(this._model.position.x - 500, this._model.position.y + 1000, this._model.position.z - 500)
   }

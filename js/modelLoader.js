@@ -9,6 +9,8 @@ import {
   Box3
 } from './libs/three.module.js'
 
+const TIME_SCALE_FACTOR = 0.75
+
 // Global reference to the loaded model so that other functions can manipulate it
 
 /**
@@ -351,7 +353,7 @@ class ModelDisplayer {
    * Function to be called within the main animation loop
    */
   animate () {
-    let delta = this._clock.getDelta()
+    let delta = this._clock.getDelta() * TIME_SCALE_FACTOR
     this._mixer.update(delta)
     this._renderer.render(this._scene, this._camera)
   }
