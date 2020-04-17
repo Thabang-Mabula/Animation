@@ -3,7 +3,11 @@ const AnimationNameConstants = {
   SHOES: 'shoes',
   HEAD: 'head',
   LA: 'LA',
-  NONE: 'none'
+  SCROLL: 'scroll',
+  CLICK: 'click',
+  NONE: 'none',
+  INDEX_FINGER: 'INDEX-FINGER'
+
 }
 
 export { AnimationNameConstants }

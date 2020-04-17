@@ -1,4 +1,7 @@
 import { AnimationNameConstants } from './animationConstants.js'
+
+const TRIGGER_REGION_RADIUS = 5
+
 class CursorObject {
   constructor (scene) {
     this._model = {}
@@ -59,31 +62,6 @@ class CursorObject {
     this._model.position.copy(intersectPoint.multiplyScalar(2))
   }
 
-  playClickAnimation () {
-    if (this._isActionPlayable()) {
-      const INDEX_OF_CLICK_ANIMATION = 1
-
-      let clip = this._animations[INDEX_OF_CLICK_ANIMATION]
-      this._currentClipDuration = clip.duration
-      this._currentAction = this._mixer.clipAction(clip)
-      this._currentAction.setLoop(THREE.LoopOnce)
-      this._currentAction.timeScale = 1
-      console.log(this._model.position)
-      this._currentAction.play()
-    }
-  }
-
-  playScrollAnimation () {
-    if (this._isActionPlayable()) {
-      const INDEX_OF_SCROLL_ANIMATION = 3
-      let clip = this._animations[INDEX_OF_SCROLL_ANIMATION]
-      this._currentClipDuration = clip.duration
-      this._currentAction = this._mixer.clipAction(clip)
-      this._currentAction.setLoop(THREE.LoopOnce)
-      this._currentAction.timeScale = 1
-      this._currentAction.play()
-    }
-  }
   _isActionPlayable () {
     let shouldPlay = false
 
@@ -97,8 +75,22 @@ class CursorObject {
     return shouldPlay
   }
 
+  playAnimation (clipName) {
+    if ((clipName === AnimationNameConstants.LA || clipName === AnimationNameConstants.SCROLL ||
+      clipName === AnimationNameConstants.CLICK || clipName === AnimationNameConstants.TOUCH) && 
+      this._isActionPlayable()) {
+
+      if (clipName === AnimationNameConstants.TOUCH) { clipName =  AnimationNameConstants.INDEX_FINGER } 
+      let clip = THREE.AnimationClip.findByName(this._animations, clipName)
+      this._currentClipDuration = clip.duration
+      this._currentAction = this._mixer.clipAction(clip)
+      this._currentAction.setLoop(THREE.LoopOnce)
+      this._currentAction.timeScale = 1
+      this._currentAction.play()
+    }
+  }
+
   getModelAnimation () {
-    const TRIGGER_REGION_RADIUS = 5
     let animation = AnimationNameConstants.NONE
 
     this._trigger_centres.forEach((value, key) => {

@@ -28,7 +28,7 @@ $(document).ready(async function () {
       modelDisplayer.revertToOriginalPosition()
     } else {
       modelDisplayer.playAnimation(animationToBePlayed)
-      console.log('An animation should have played')
+      cursorObject.playAnimation(animationToBePlayed)
     }
 
     // Check first if the mouse is outside of the activationRegion
@@ -46,12 +46,13 @@ $(document).ready(async function () {
 
   $(window).click((e) => {
     e.preventDefault()
-    cursorObject.playClickAnimation()
+    cursorObject.playAnimation(AnimationNameConstants.CLICK)
   })
 
   $(window).scroll((e) => {
     e.preventDefault()
-    cursorObject.playScrollAnimation()
+    cursorObject.playAnimation(AnimationNameConstants.SCROLL)
+    e.stopPropagation()
   })
 
   animate()
