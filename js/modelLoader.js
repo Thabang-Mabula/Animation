@@ -47,8 +47,8 @@ let enableResizeAdjust = (camera, renderer) => {
  * Creates and returns a pre-configured perspective camera
  * @returns {THREE.PerspectiveCamera}
  */
-let createCamera = () => {
-  let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+let createCamera = (domElement) => {
+  let camera = new THREE.PerspectiveCamera(75, domElement.width() / domElement.height(), 0.1, 1000)
   camera.position.set(100, 100, 100)
   camera.lookAt(new Vector3(0, 0, 0))
   return camera
@@ -79,7 +79,7 @@ class ModelDisplayer {
     this._model = {}
     this._scene = new Scene()
     this._scene.background = new THREE.Color(0x000000)
-    this._camera = createCamera()
+    this._camera = createCamera(displayDOMElement)
     this._renderer = createRenderer()
     this._enableResizeAdjust(displayDOMElement.width, displayDOMElement.height)
     this._center = {}
@@ -324,18 +324,20 @@ class ModelDisplayer {
     return new Promise((resolve, reject) => {
       loader.load('../models/' + filename, gltf => {
         let model = gltf.scene
-        model.scale.set(24, 24, 24)
+        model.scale.set(1, 1, 1)
 
         const box = new THREE.Box3().setFromObject(model)
         const size = box.getSize(new THREE.Vector3()).length()
         this._center = box.getCenter(new THREE.Vector3())
 
-        model.position.x += (model.position.x - this._center.x) - 160
-        model.position.y += (model.position.y - this._center.y) - 500
+        model.position.x += (model.position.x - this._center.x) // - 160
+        model.position.y += (model.position.y - this._center.y) - 40
         model.position.z += (model.position.z - this._center.z)
 
-        this._camera.near = size / 100
-        this._camera.far = size * 100
+        // this._camera.near = size / 100
+        // this._camera.far = size * 100
+        // this._camera.position.y = -1
+        this._camera.setFocalLength(35)
         this._camera.updateProjectionMatrix()
 
         model.lookAt(this._camera.position)

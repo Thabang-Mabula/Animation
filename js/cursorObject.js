@@ -1,6 +1,6 @@
 import { AnimationNameConstants } from './animationConstants.js'
 
-const TRIGGER_REGION_RADIUS = 7
+const TRIGGER_REGION_RADIUS = 5
 const TIME_SCALE_FACTOR = 0.75
 class CursorObject {
   constructor (scene) {
@@ -14,18 +14,21 @@ class CursorObject {
 
     this._trigger_centres = new Map([
       [AnimationNameConstants.TOUCH, new THREE.Vector3(70, 60, 65)],
-      [AnimationNameConstants.SHOES, new THREE.Vector3(115, 50, 40)],
-      [AnimationNameConstants.HEAD, new THREE.Vector3(95, 60, 45)],
-      [AnimationNameConstants.LA, new THREE.Vector3(65, 50, 85)]
+      [AnimationNameConstants.SHOES, new THREE.Vector3(85, 55, 55)],
+      [AnimationNameConstants.HEAD, new THREE.Vector3(75, 65, 60)],
+      [AnimationNameConstants.LA, new THREE.Vector3(65, 60, 75)]
     ])
   }
 
+  getPostion () {
+    return this._model.position
+  }
   loadCursorObjectToScene (filename) {
     var loader = new THREE.GLTFLoader()
     return new Promise((resolve, reject) => {
       loader.load('../models/' + filename, gltf => {
         let model = gltf.scene
-        model.scale.set(0.5, 0.5, 0.5)
+        model.scale.set(0.2, 0.2, 0.2)
 
         const box = new THREE.Box3().setFromObject(model)
         this._center = box.getCenter(new THREE.Vector3())

@@ -47,6 +47,7 @@ $(document).ready(async function () {
   $(window).click((e) => {
     e.preventDefault()
     cursorObject.playAnimation(AnimationNameConstants.CLICK)
+    console.log(cursorObject.getPostion())
   })
 
   $(window).scroll((e) => {
