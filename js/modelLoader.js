@@ -324,14 +324,14 @@ class ModelDisplayer {
     return new Promise((resolve, reject) => {
       loader.load('../models/' + filename, gltf => {
         let model = gltf.scene
-        model.scale.set(1, 1, 1)
+        model.scale.set(2, 2, 2)
 
         const box = new THREE.Box3().setFromObject(model)
         const size = box.getSize(new THREE.Vector3()).length()
         this._center = box.getCenter(new THREE.Vector3())
 
         model.position.x += (model.position.x - this._center.x) // - 160
-        model.position.y += (model.position.y - this._center.y) - 40
+        model.position.y += (model.position.y - this._center.y) - 80
         model.position.z += (model.position.z - this._center.z)
 
         // this._camera.near = size / 100
