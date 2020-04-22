@@ -49,8 +49,9 @@ let enableResizeAdjust = (camera, renderer) => {
  */
 let createCamera = (domElement) => {
   let camera = new THREE.PerspectiveCamera(75, domElement.width() / domElement.height(), 0.1, 1000)
-  camera.position.set(100, 100, 100)
+  camera.position.set(200, 0, 0)
   camera.lookAt(new Vector3(0, 0, 0))
+  camera.setFocalLength(35)
   return camera
 }
 
@@ -324,23 +325,36 @@ class ModelDisplayer {
     return new Promise((resolve, reject) => {
       loader.load('../models/' + filename, gltf => {
         let model = gltf.scene
-        model.scale.set(2, 2, 2)
 
         const box = new THREE.Box3().setFromObject(model)
         const size = box.getSize(new THREE.Vector3()).length()
         this._center = box.getCenter(new THREE.Vector3())
 
-        model.position.x += (model.position.x - this._center.x) // - 160
-        model.position.y += (model.position.y - this._center.y) - 80
-        model.position.z += (model.position.z - this._center.z)
+        model.position.x = -70
+        model.position.y = -48
+        model.position.z = -12
+
+        model.rotation.x = Math.PI / 2
+
+        model.scale.set(1, 1, 1)
+        var axes = new THREE.AxesHelper(50)
+        this._scene.add(axes)
+        // model.position.x += (model.position.x - this._center.x) - 15.174
+        // model.position.y += (model.position.y - this._center.y) + 13.372
+        // model.position.z += (model.position.z - this._center.z)
 
         // this._camera.near = size / 100
         // this._camera.far = size * 100
         // this._camera.position.y = -1
-        this._camera.setFocalLength(35)
+
         this._camera.updateProjectionMatrix()
 
         model.lookAt(this._camera.position)
+
+        // let cameraHelper = new THREE.CameraHelper(this._camera)
+        // this._scene.add(cameraHelper)
+
+        // axes.geometry = new THREE.Geometry().fromBufferGeometry(axes.geometry)
 
         this._scene.add(model)
         resolve(gltf)
@@ -355,6 +369,7 @@ class ModelDisplayer {
    * Function to be called within the main animation loop
    */
   animate () {
+    this._camera.position.x = 100
     let delta = this._clock.getDelta() * TIME_SCALE_FACTOR
     this._mixer.update(delta)
     this._renderer.render(this._scene, this._camera)

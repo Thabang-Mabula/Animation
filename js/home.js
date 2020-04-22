@@ -47,6 +47,7 @@ $(document).ready(async function () {
   $(window).click((e) => {
     e.preventDefault()
     cursorObject.playAnimation(AnimationNameConstants.CLICK)
+    modelDisplayer.playAnimation(AnimationNameConstants.TOUCH)
     console.log(cursorObject.getPostion())
   })
 
