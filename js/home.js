@@ -32,6 +32,13 @@ $(document).ready(async function () {
   //   }
   // })
 
+  $(window).on('keypress', function (e) {
+    if (e.which === 13) {
+      console.clear()
+      console.log(modelDisplayer.getCamera())
+    }
+  })
+
   $(window).click((e) => {
     e.preventDefault()
     cursorObject.playAnimation(AnimationNameConstants.CLICK)
