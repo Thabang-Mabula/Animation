@@ -9,6 +9,7 @@ import {
   Box3
 } from './libs/three.module.js'
 
+import { OrbitControls } from './libs/OrbitControls.js'
 const TIME_SCALE_FACTOR = 0.75
 
 // Global reference to the loaded model so that other functions can manipulate it
@@ -19,7 +20,7 @@ const TIME_SCALE_FACTOR = 0.75
  * @param {THREE.PointLight} pointLight The main point light used to create shadow 3D effect when viewing model
  */
 let enableOrbitalControls = (camera, pointLight) => {
-  var controls = new THREE.OrbitControls(camera, document.querySelector('body'))
+  var controls = new OrbitControls(camera, document.getElementsByClassName('model-area')[0])
   controls.enableZoom = true
   controls.addEventListener('change', () => {
     pointLight.position.copy(camera.position)
@@ -49,9 +50,10 @@ let enableResizeAdjust = (camera, renderer) => {
  */
 let createCamera = (domElement) => {
   let camera = new THREE.PerspectiveCamera(75, domElement.width() / domElement.height(), 0.1, 1000)
-  camera.position.set(200, 0, 0)
-  camera.lookAt(new Vector3(0, 0, 0))
+  camera.position.set(141.4, 141.4, 0)
+  camera.lookAt(new Vector3(-40, -48, -12))
   camera.setFocalLength(35)
+  // camera.zoom = 2
   return camera
 }
 
@@ -83,6 +85,7 @@ class ModelDisplayer {
     this._camera = createCamera(displayDOMElement)
     this._renderer = createRenderer()
     this._enableResizeAdjust(displayDOMElement.width, displayDOMElement.height)
+
     this._center = {}
     this._timeOff = new Date()
     this._currentAction = null
@@ -189,6 +192,7 @@ class ModelDisplayer {
       this._loadModelOntoScene(filename).then((model) => {
         this._model = model
         this._mixer = new THREE.AnimationMixer(model.scene)
+        enableOrbitalControls(this._camera, pointLight)
         resolve(model)
       }).catch((err) => {
         console.error(err)
@@ -330,11 +334,12 @@ class ModelDisplayer {
         const size = box.getSize(new THREE.Vector3()).length()
         this._center = box.getCenter(new THREE.Vector3())
 
-        model.position.x = -70
+        model.position.x = -40
         model.position.y = -48
         model.position.z = -12
 
         model.rotation.x = Math.PI / 2
+        model.rotation.z = Math.PI
 
         model.scale.set(1, 1, 1)
         var axes = new THREE.AxesHelper(50)

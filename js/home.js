@@ -16,33 +16,21 @@ $(document).ready(async function () {
   // modelDisplayer.displayMotionRegions()
   // cursorObject.dispalyTriggerRegions()
 
-  $('body').mousemove(function (event) {
-    let mousePosition = { x: event.pageX, y: event.pageY }
-    cursorObject.setCursorPosition(mousePosition, modelDisplayer.getCamera(), modelDisplayer.getRenderer())
+  // $('body').mousemove(function (event) {
+  //   let mousePosition = { x: event.pageX, y: event.pageY }
+  //   cursorObject.setCursorPosition(mousePosition, modelDisplayer.getCamera(), modelDisplayer.getRenderer())
 
-    let triggerRegionPoints = modelDisplayer.getTriggerRegions()
-    let activationRegion = modelDisplayer.getActivationRegion()
+  //   let triggerRegionPoints = modelDisplayer.getTriggerRegions()
+  //   let activationRegion = modelDisplayer.getActivationRegion()
 
-    const animationToBePlayed = cursorObject.getModelAnimation()
-    if (animationToBePlayed === AnimationNameConstants.NONE) {
-      modelDisplayer.revertToOriginalPosition()
-    } else {
-      modelDisplayer.playAnimation(animationToBePlayed)
-      cursorObject.playAnimation(animationToBePlayed)
-    }
-
-    // Check first if the mouse is outside of the activationRegion
-    // If so, play an animaiton to revert the character to its original position
-    // if (!isWithinTriggerRegion(mousePosition, activationRegion)) {
-    //   modelDisplayer.revertToOriginalPosition()
-    // } else {
-    //   for (let i = 0; i < triggerRegionPoints.length; i++) {
-    //     if (isWithinTriggerRegion(mousePosition, triggerRegionPoints[i])) {
-    //       modelDisplayer.playAnimation(i)
-    //     }
-    //   }
-    // }
-  })
+  //   const animationToBePlayed = cursorObject.getModelAnimation()
+  //   if (animationToBePlayed === AnimationNameConstants.NONE) {
+  //     modelDisplayer.revertToOriginalPosition()
+  //   } else {
+  //     modelDisplayer.playAnimation(animationToBePlayed)
+  //     cursorObject.playAnimation(animationToBePlayed)
+  //   }
+  // })
 
   $(window).click((e) => {
     e.preventDefault()
@@ -51,11 +39,11 @@ $(document).ready(async function () {
     console.log(cursorObject.getPostion())
   })
 
-  $(window).scroll((e) => {
-    e.preventDefault()
-    cursorObject.playAnimation(AnimationNameConstants.SCROLL)
-    e.stopPropagation()
-  })
+  // $(window).scroll((e) => {
+  //   e.preventDefault()
+  //   cursorObject.playAnimation(AnimationNameConstants.SCROLL)
+  //   e.stopPropagation()
+  // })
 
   animate()
 })
