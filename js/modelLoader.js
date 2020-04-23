@@ -22,6 +22,8 @@ const TIME_SCALE_FACTOR = 0.75
 let enableOrbitalControls = (camera, pointLight) => {
   var controls = new OrbitControls(camera, document.getElementsByClassName('model-area')[0])
   controls.enableZoom = true
+  controls.screenSpacePanning = true
+
   controls.addEventListener('change', () => {
     pointLight.position.copy(camera.position)
   })
@@ -50,8 +52,9 @@ let enableResizeAdjust = (camera, renderer) => {
  */
 let createCamera = (domElement) => {
   let camera = new THREE.PerspectiveCamera(75, domElement.width() / domElement.height(), 0.1, 1000)
-  camera.position.set(141.4, 141.4, 0)
+  camera.position.set(0, 0, 200)
   camera.lookAt(new Vector3(-40, -48, -12))
+  // camera.up.set(0, 0, 1)
   camera.setFocalLength(35)
   // camera.zoom = 2
   return camera
@@ -374,7 +377,6 @@ class ModelDisplayer {
    * Function to be called within the main animation loop
    */
   animate () {
-    this._camera.position.x = 100
     let delta = this._clock.getDelta() * TIME_SCALE_FACTOR
     this._mixer.update(delta)
     this._renderer.render(this._scene, this._camera)
