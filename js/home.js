@@ -3,7 +3,7 @@ import { CursorObject } from './cursorObject.js'
 import { AnimationNameConstants } from './animationConstants.js'
 
 var modelDisplayArea = $('.model-area')
-var modelFileName = 'char_2.glb'
+var modelFileName = 'test.glb'
 var cursorFileName = 'hand.glb'
 var modelDisplayer = new ModelDisplayer(modelFileName, modelDisplayArea)
 var cursorObject = new CursorObject(modelDisplayer.getScene())

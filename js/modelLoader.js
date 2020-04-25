@@ -52,10 +52,10 @@ let enableResizeAdjust = (camera, renderer) => {
  */
 let createCamera = (domElement) => {
   let camera = new THREE.PerspectiveCamera(75, domElement.width() / domElement.height(), 0.1, 1000)
-  camera.position.set(0, 0, 200)
-  camera.lookAt(new Vector3(-40, -48, -12))
+  camera.position.set(0, 5, 10)
+  camera.lookAt(new Vector3(23, -58, -100))
   // camera.up.set(0, 0, 1)
-  camera.setFocalLength(35)
+  camera.setFocalLength(50)
   // camera.zoom = 2
   return camera
 }
@@ -85,6 +85,7 @@ class ModelDisplayer {
     this._model = {}
     this._scene = new Scene()
     this._scene.background = new THREE.Color(0x000000)
+    // this._scene.background = new THREE.Color(0xFFFFFF)
     this._camera = createCamera(displayDOMElement)
     this._renderer = createRenderer()
     this._enableResizeAdjust(displayDOMElement.width, displayDOMElement.height)
@@ -337,19 +338,27 @@ class ModelDisplayer {
         const size = box.getSize(new THREE.Vector3()).length()
         this._center = box.getCenter(new THREE.Vector3())
 
-        model.position.x = -40
-        model.position.y = -48
-        model.position.z = -12
+        this._camera = gltf.cameras[0]
+        // this._camera.fov = 35
+        // this._camera.near = 1
+        // this._camera.far = 1000
+        // this._camera.focus = 10
+        // this._camera.aspect = 1.483418
 
-        model.rotation.x = Math.PI / 2
-        model.rotation.z = Math.PI
+        // model.position.x = 23
+        // model.position.y = -58
+        // model.position.z = -100
+
+        // model.rotation.x = 0.0471239
+        // model.rotation.y = -0.23160519
+        // model.rotation.z = -0.01029744
 
         model.scale.set(1, 1, 1)
         var axes = new THREE.AxesHelper(50)
         this._scene.add(axes)
-        // model.position.x += (model.position.x - this._center.x) - 15.174
-        // model.position.y += (model.position.y - this._center.y) + 13.372
-        // model.position.z += (model.position.z - this._center.z)
+        model.position.x += (model.position.x - this._center.x)
+        model.position.y += (model.position.y - this._center.y) - 40
+        model.position.z += (model.position.z - this._center.z)
 
         // this._camera.near = size / 100
         // this._camera.far = size * 100
